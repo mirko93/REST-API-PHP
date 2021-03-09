@@ -7,6 +7,7 @@ header('Content-Type: application/json');
 include_once '../../config/Database.php';
 include_once '../../models/Category.php';
 
+
 // db connect
 $database = new Database();
 $db = $database->connect();
