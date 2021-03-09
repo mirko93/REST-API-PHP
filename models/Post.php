@@ -48,6 +48,7 @@ class Post
         $this->category_name = $row['category_name'];
     }
 
+    // create post
     public function create()
     {
         $query = 'INSERT INTO posts SET title = :title, body = :body, author = :author, category_id = :category_id';
@@ -63,6 +64,51 @@ class Post
         $statement->bindParam(':body', $this->body);
         $statement->bindParam(':author', $this->author);
         $statement->bindParam(':category_id', $this->category_id);
+
+        if ($statement->execute()) {
+            return true;
+        } else {
+            printf("ERROR: %s.\n", $statement->error);
+            return false;
+        }
+    }
+
+    // update post
+    public function update()
+    {
+        $query = 'UPDATE posts SET title = :title, body = :body, author = :author, category_id = :category_id WHERE id = :id';
+        $statement = $this->conn->prepare($query);
+
+        // clean data
+        $this->title = htmlspecialchars(strip_tags($this->title));
+        $this->body = htmlspecialchars(strip_tags($this->body));
+        $this->author = htmlspecialchars(strip_tags($this->author));
+        $this->category_id = htmlspecialchars(strip_tags($this->category_id));
+        $this->id = htmlspecialchars(strip_tags($this->id));
+
+        $statement->bindParam(':title', $this->title);
+        $statement->bindParam(':body', $this->body);
+        $statement->bindParam(':author', $this->author);
+        $statement->bindParam(':category_id', $this->category_id);
+        $statement->bindParam(':id', $this->id);
+
+        if ($statement->execute()) {
+            return true;
+        } else {
+            printf("ERROR: %s.\n", $statement->error);
+            return false;
+        }
+    }
+
+    // delete post
+    public function delete()
+    {
+        $query = 'DELETE FROM posts WHERE id = :id';
+        $statement = $this->conn->prepare($query);
+
+        $this->id = htmlspecialchars(strip_tags($this->id));
+
+        $statement->bindParam(':id', $this->id);
 
         if ($statement->execute()) {
             return true;
